@@ -1,0 +1,2 @@
+F:\WorkProgramming\C Plus Plus Convert SQL\VisualStudio\1\NarrowDesign\x64\Debug\NarrowDesign.exe
+F:\WorkProgramming\C Plus Plus Convert SQL\VisualStudio\NarrowDesign\x64\Debug\NarrowDesign.exe
