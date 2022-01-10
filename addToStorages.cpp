@@ -14,39 +14,56 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/ostreamwrapper.h"
 #include "NarrowDesign.h"
+
+#define _BOOL "BOOL"
+#define _TABLE "TABLE"
+#define _INT "INT"
+#define _STRING "STRING"
+#define _AddResponseValue 1
+#define _AddQuestionValue 1
+
 using namespace rapidjson;
 using namespace std;
 
-void NarrowDesign::addQuestion(string groupName, string text)
+void NarrowDesign::AddQuestion(string groupName, string text)
 {
-    AllQuestions[++QuestionID].groupName = groupName;
-    AllQuestions[QuestionID].text = text;
-    OptionID = 0;
+    AllQuestions[++QuestionID_].groupName = groupName;
+    AllQuestions[QuestionID_].text = text;
+    OptionID_ = 0;
 }
-void NarrowDesign::addQuestion2(vector<string> lv, bool type)
+void NarrowDesign::AddQuestion2(vector<string> lv, bool type)
 {
-    QuestionID2++;
-    reverse(lv.begin(),lv.end());
-    AllQuestions2[QuestionID2].level = lv;
-    AllQuestions2[QuestionID2].isClosed = type;
-    maxLevel = max(maxLevel,(int)lv.size());
+    QuestionID2_++;
+    reverse(lv.begin(), lv.end());
+    AllQuestions2[QuestionID2_].level = lv;
+    AllQuestions2[QuestionID2_].isClosed = type;
+    MaxLevel_ = max(MaxLevel_, (int)lv.size());
 }
-void NarrowDesign::addMapBOOL(int curQuestion, string val, Value& arr)
+void NarrowDesign::AddMapBOOL(int curQuestion, string val, Value& arr)
 {
-    AllQuestions[curQuestion].isClosed=1;
-	AllOptions.push_back({++OptionID, curQuestion, val});
+    AllQuestions[curQuestion].isClosed = 1;
+    AllOptions.push_back({ ++OptionID_, curQuestion, val });
 
-	for (int i = 0; i < (int)arr.Size(); i++)
-		if (arr[i] == 1)
-            closedResponses.push_back({i+1,curQuestion,OptionID});
+    for (int i = 0; i < (int)arr.Size(); i++)
+        if (arr[i] == 1)
+            closedResponses.push_back({ i + 1,curQuestion,OptionID_ });
+
 }
-void NarrowDesign::addMapINT(int curQuestion, string val, Value& arr)
+void NarrowDesign::AddMapINT(int curQuestion, string val, Value& arr)
 {
-	for (int i = 0; i < (int)arr.Size(); i++)
-		openedResponses.push_back({i+1,curQuestion,to_string(arr[i].GetInt()),"INT"});
+    for (int i = 0; i < (int)arr.Size(); i++)
+        if (arr[i].IsNull())
+            openedResponses.push_back({ i + 1,curQuestion,"NULL","INT"});
+        else
+            openedResponses.push_back({ i + 1,curQuestion,to_string(arr[i].GetInt()),"INT" });
+
 }
-void NarrowDesign::addMapSTR(int curQuestion, string val, Value& arr)
+void NarrowDesign::AddMapSTR(int curQuestion, string val, Value& arr)
 {
-	for (int i = 0; i < (int)arr.Size(); i++)
-		openedResponses.push_back({i+1,curQuestion,arr[i].GetString(),"STRING"});
+    for (int i = 0; i < (int)arr.Size(); i++)
+        if (arr[i].IsNull())
+            openedResponses.push_back({ i + 1,curQuestion,"NULL","STRING"});
+        else
+            openedResponses.push_back({ i + 1,curQuestion,arr[i].GetString(),"STRING" });
+
 }
